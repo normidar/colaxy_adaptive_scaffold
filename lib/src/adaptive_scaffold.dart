@@ -180,12 +180,15 @@ class _AdaptiveScaffoldState extends State<AdaptiveScaffold> {
             .map(
               (item) => NavigationDestination(
                 icon: item.icon,
-                label: size.height < widget.heightThresholdForLabels ? '' : item.name,
+                label: item.name,
               ),
             )
             .toList(),
         selectedIndex: _selectedIndex,
         onDestinationSelected: _onDestinationSelected,
+        labelBehavior: size.height < widget.heightThresholdForLabels
+            ? NavigationDestinationLabelBehavior.alwaysHide
+            : NavigationDestinationLabelBehavior.alwaysShow,
       ),
       floatingActionButton: widget.floatingActionButton,
     );

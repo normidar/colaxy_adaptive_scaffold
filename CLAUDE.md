@@ -1,144 +1,94 @@
-# Coding Guidelines for colaxy_adaptive_scaffold
+# Coding Guidelines
 
-このドキュメントは、`colaxy_adaptive_scaffold` プロジェクトのコーディングルールとガイドラインを定義します。
+## File Structure
 
-## ファイル構成のルール
+### Class Separation
+- One class per file
+- File name: snake_case version of class name (e.g., `NavigationItem` → `navigation_item.dart`)
+- Related helper classes may share the same file
 
-### 1. クラスの分離
-- **各クラスは独立したファイルに配置する**
-  - 1つのファイルには1つの主要なクラスのみを定義
-  - ファイル名はクラス名のスネークケース版（例: `NavigationItem` → `navigation_item.dart`）
-  - 関連する小さなヘルパークラスは同じファイルに含めても良い
-
-### 2. ディレクトリ構造
+### Directory Structure
 ```
 lib/
-├── colaxy_adaptive_scaffold.dart  # メインのエクスポートファイル
-└── src/                           # 実装ファイル
-    ├── adaptive_scaffold.dart     # AdaptiveScaffoldクラス
-    ├── navigation_item.dart       # NavigationItemクラス
-    └── ...                        # その他のクラス
+├── colaxy_adaptive_scaffold.dart  # Main export file
+└── src/                           # Implementation files
+    ├── adaptive_scaffold.dart
+    ├── navigation_item.dart
+    └── ...
 ```
 
-### 3. エクスポート管理
-- すべての公開クラスは `lib/colaxy_adaptive_scaffold.dart` からエクスポート
-- 内部実装の詳細は `src/` ディレクトリに配置
-- ユーザーは `import 'package:colaxy_adaptive_scaffold/colaxy_adaptive_scaffold.dart';` のみをインポート
+### Export Management
+- Export all public classes from `lib/colaxy_adaptive_scaffold.dart`
+- Keep implementation details in `src/` directory
 
-## ドキュメンテーションのルール
+## Documentation
 
-### 1. クラスのドキュメント
-すべての公開クラスには以下を含む包括的なドキュメントを記述：
-
+### Class Documentation
 ```dart
-/// クラスの簡潔な説明（1行）
+/// Brief class description (one line)
 ///
-/// より詳細な説明（複数行可）
-/// - 機能の説明
-/// - 使用方法
-/// - 注意事項
+/// Detailed explanation
 ///
-/// ## Parameters (パラメータがある場合)
+/// ## Parameters
 ///
-/// ### Required Parameters
-/// - **[paramName]**: パラメータの説明
+/// ### Required
+/// - **[paramName]**: Description
 ///
-/// ### Optional Parameters
-/// - **[paramName]**: パラメータの説明
-///   - デフォルト値の説明
-///   - 使用例
+/// ### Optional
+/// - **[paramName]**: Description (default: value)
 ///
 /// ## Example
 ///
 /// ```dart
-/// // 使用例のコード
+/// // Usage example
 /// ```
-class MyClass {
-  // ...
-}
+class MyClass { }
 ```
 
-### 2. パラメータのドキュメント
-各パラメータには詳細なドキュメントを記述：
-
+### Parameter Documentation
 ```dart
-/// パラメータの簡潔な説明
+/// Brief parameter description
 ///
-/// より詳細な説明（必要に応じて）
-/// - 動作の詳細
-/// - デフォルト値
-/// - 制約事項
+/// Additional details if needed
 final Type parameterName;
 ```
 
-### 3. README.md の更新
-新機能や変更を加えた場合は、必ず `README.md` を更新：
+### README Updates
+Update `README.md` when adding features:
+- **Features**: List main capabilities
+- **Usage**: Include basic and advanced examples
+- **API Reference**: Document all public classes and parameters
 
-- **Features セクション**: 主要な機能を箇条書きで説明
-- **Usage セクション**: 基本的な使用例と高度な使用例を含める
-- **API Reference セクション**: すべての公開クラスとパラメータを文書化
-- **How It Works セクション**: 内部動作の概要を説明
+## Coding Style
 
-## コーディングスタイル
+### Naming Conventions
+- **Classes**: PascalCase (`AdaptiveScaffold`)
+- **Files**: snake_case (`adaptive_scaffold.dart`)
+- **Variables/Parameters**: camelCase (`selectedIndex`)
+- **Constants**: lowerCamelCase (`defaultThreshold`)
 
-### 1. 命名規則
-- **クラス名**: PascalCase（例: `AdaptiveScaffold`, `NavigationItem`）
-- **ファイル名**: snake_case（例: `adaptive_scaffold.dart`, `navigation_item.dart`）
-- **変数・パラメータ**: camelCase（例: `selectedIndex`, `aspectRatioThreshold`）
-- **定数**: lowerCamelCase（例: `defaultThreshold`）
+### Code Organization
+- Public members first, private members last
+- Logical method order: lifecycle → build → helpers
 
-### 2. コメント
-- 日本語と英語の両方を適切に使用
-- 公開APIは英語でドキュメント化
-- 内部実装のコメントは日本語でも可
+## Design Principles
 
-### 3. コードの整理
-- 関連する機能は近くに配置
-- パブリックメンバーを先に、プライベートメンバーを後に
-- 論理的な順序でメソッドを配置（ライフサイクルメソッド → ビルドメソッド → ヘルパーメソッド）
+1. **Simplicity**: Keep API simple and intuitive with sensible defaults
+2. **Flexibility**: Provide customizable parameters with reasonable defaults
+3. **Documentation**: Fully document all public APIs with examples
 
-## 設計原則
+## Change Management
 
-### 1. シンプルさを保つ
-- APIはシンプルで直感的に
-- デフォルト値を適切に設定し、ほとんどのケースで追加設定不要に
-- 複雑な設定は必要な場合のみ公開
+- **Breaking Changes**: Deprecate first with `@deprecated`, provide alternatives
+- **New Features**: Update README with examples
+- **Bug Fixes**: Document in commit messages
 
-### 2. 柔軟性
-- カスタマイズ可能なパラメータを提供
-- 合理的なデフォルト値を設定
-- 拡張可能な設計
+## Checklist
 
-### 3. ドキュメント優先
-- すべての公開APIは完全にドキュメント化
-- 使用例を含める
-- パラメータの意味と効果を明確に説明
-
-## 変更管理
-
-### 1. 破壊的変更
-- 既存のAPIを変更する場合は、まず非推奨化（@deprecated）
-- 代替手段を提供
-- CHANGELOG.md に記録
-
-### 2. 新機能追加
-- README.md を更新
-- 使用例を追加
-- テストを追加（該当する場合）
-
-### 3. バグ修正
-- 問題の説明をコミットメッセージに記載
-- 可能であればテストケースを追加
-
-## チェックリスト
-
-新しいクラスや機能を追加する際のチェックリスト：
-
-- [ ] クラスは独立したファイルに配置されているか
-- [ ] クラスに包括的なドキュメントがあるか
-- [ ] すべてのパラメータにドキュメントがあるか
-- [ ] 使用例が含まれているか
-- [ ] `lib/colaxy_adaptive_scaffold.dart` からエクスポートされているか
-- [ ] README.md が更新されているか
-- [ ] API Reference セクションが更新されているか
-- [ ] 使用例が README.md に追加されているか
+Before committing new classes/features:
+- [ ] Class in separate file
+- [ ] Comprehensive documentation
+- [ ] All parameters documented
+- [ ] Usage examples included
+- [ ] Exported from `lib/colaxy_adaptive_scaffold.dart`
+- [ ] README.md updated

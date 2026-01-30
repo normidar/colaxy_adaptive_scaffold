@@ -74,6 +74,7 @@ class AdaptiveScaffold extends StatefulWidget {
     required this.items,
     this.initialIndex = 0,
     this.aspectRatioThreshold = 1.2,
+    this.heightThresholdForLabels = 600,
     this.floatingActionButton,
     super.key,
   });
@@ -101,6 +102,15 @@ class AdaptiveScaffold extends StatefulWidget {
   /// Defaults to 1.2, which means landscape-ish layouts (wider than tall)
   /// will use side navigation, while portrait layouts use bottom navigation.
   final double aspectRatioThreshold;
+
+  /// The height threshold for showing labels in portrait mode.
+  ///
+  /// When in portrait mode (bottom navigation) and the screen height is below
+  /// this threshold, the navigation labels will be hidden to save space.
+  ///
+  /// Defaults to 600 pixels. Set to 0 to always show labels, or to a very
+  /// high value to always hide labels in portrait mode.
+  final double heightThresholdForLabels;
 
   /// An optional floating action button.
   ///
@@ -170,7 +180,7 @@ class _AdaptiveScaffoldState extends State<AdaptiveScaffold> {
             .map(
               (item) => NavigationDestination(
                 icon: item.icon,
-                label: item.name,
+                label: size.height < widget.heightThresholdForLabels ? '' : item.name,
               ),
             )
             .toList(),

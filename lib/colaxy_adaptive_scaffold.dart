@@ -1,1 +1,4 @@
-export 'package:colaxy_adaptive_scaffold/src/abc.dart';
+/// A Flutter package template.
+library colaxy_adaptive_scaffold;
+
+export 'src/adaptive_scaffold.dart';

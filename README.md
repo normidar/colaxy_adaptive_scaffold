@@ -6,13 +6,15 @@
 [![Twitter](https://img.shields.io/twitter/url/https/twitter.com/normidar.svg?style=social&label=Follow%20%40normidar)](https://twitter.com/normidar)
 [![Github-sponsors](https://img.shields.io/badge/sponsor-30363D?logo=GitHub-Sponsors&logoColor=#EA4AAA)](https://github.com/sponsors/normidar)
 
-A simple adaptive scaffold that switches between a `NavigationBar` (bottom) and a `NavigationRail` (side) based on screen width.
+An adaptive scaffold that automatically switches between `NavigationBar` (bottom) and `NavigationRail` (side) based on screen aspect ratio.
 
 ## Features
 
-- **Adaptive Navigation**: Automatically switches between `BottomNavigationBar` and `NavigationRail`.
-- **Simple API**: Easy to drop in as a replacement for standard `Scaffold` when you need navigation.
-- **Customizable Breakpoint**: Define when the switch happens.
+- **Aspect Ratio-Based Adaptation**: Automatically switches navigation layout based on screen aspect ratio (width/height)
+- **Simple API**: Just provide a list of navigation items with names, icons, and pages
+- **Internal State Management**: No need to manage selected index yourself
+- **Customizable Threshold**: Configure when the layout switch happens
+- **Fully Documented**: Comprehensive parameter documentation and examples
 
 ## Getting Started
 
@@ -26,6 +28,8 @@ dependencies:
 ```
 
 ## Usage
+
+### Basic Example
 
 ```dart
 import 'package:flutter/material.dart';
@@ -41,38 +45,124 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: const MyHomePage(),
-    );
-  }
-}
-
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key});
-
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  int _selectedIndex = 0;
-
-  @override
-  Widget build(BuildContext context) {
-    return AdaptiveScaffold(
-      selectedIndex: _selectedIndex,
-      onDestinationSelected: (index) {
-        setState(() {
-          _selectedIndex = index;
-        });
-      },
-      destinations: const [
-        NavigationDestination(icon: Icon(Icons.home), label: 'Home'),
-        NavigationDestination(icon: Icon(Icons.settings), label: 'Settings'),
-      ],
-      body: Center(
-        child: Text('Selected Index: $_selectedIndex'),
+      home: AdaptiveScaffold(
+        items: [
+          NavigationItem(
+            name: 'Home',
+            icon: Icon(Icons.home),
+            page: HomePage(),
+          ),
+          NavigationItem(
+            name: 'Search',
+            icon: Icon(Icons.search),
+            page: SearchPage(),
+          ),
+          NavigationItem(
+            name: 'Settings',
+            icon: Icon(Icons.settings),
+            page: SettingsPage(),
+          ),
+        ],
       ),
     );
   }
 }
+
+class HomePage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Center(child: Text('Home Page'));
+  }
+}
+
+class SearchPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Center(child: Text('Search Page'));
+  }
+}
+
+class SettingsPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Center(child: Text('Settings Page'));
+  }
+}
 ```
+
+### Advanced Example with Custom Settings
+
+```dart
+AdaptiveScaffold(
+  items: [
+    NavigationItem(
+      name: 'Dashboard',
+      icon: Icon(Icons.dashboard),
+      page: DashboardPage(),
+    ),
+    NavigationItem(
+      name: 'Analytics',
+      icon: Icon(Icons.analytics),
+      page: AnalyticsPage(),
+    ),
+  ],
+  initialIndex: 0,                    // Start with first item selected
+  aspectRatioThreshold: 1.5,          // Use side navigation only on wider screens
+  floatingActionButton: FloatingActionButton(
+    onPressed: () {},
+    child: Icon(Icons.add),
+  ),
+)
+```
+
+## API Reference
+
+### AdaptiveScaffold
+
+The main widget that provides adaptive navigation.
+
+#### Parameters
+
+##### Required Parameters
+
+- **`items`** (`List<NavigationItem>`): List of navigation items to display. Each item contains:
+  - `name`: Label text for the navigation item
+  - `icon`: Icon widget to display
+  - `page`: Page widget to show when selected
+
+##### Optional Parameters
+
+- **`initialIndex`** (`int`, default: `0`): The initially selected navigation item index
+
+- **`aspectRatioThreshold`** (`double`, default: `1.2`): The aspect ratio threshold for switching layouts
+  - If `width/height >= threshold`: Uses `NavigationRail` (side navigation)
+  - If `width/height < threshold`: Uses `NavigationBar` (bottom navigation)
+  - Common values:
+    - `1.0`: Switch at square screens
+    - `1.2`: Switch at slightly landscape screens (default)
+    - `1.5`: Switch only at wider landscape screens
+
+- **`floatingActionButton`** (`Widget?`): Optional floating action button to display
+
+### NavigationItem
+
+A class that defines a navigation destination.
+
+#### Parameters
+
+- **`name`** (`String`): The label text for this navigation item
+- **`icon`** (`Widget`): The icon widget to display (typically an `Icon`)
+- **`page`** (`Widget`): The page widget to display when this item is selected
+
+## How It Works
+
+The `AdaptiveScaffold` calculates the screen's aspect ratio (`width / height`) and compares it to the `aspectRatioThreshold`:
+
+- **Portrait/Narrow layouts** (aspect ratio < threshold): Shows `NavigationBar` at the bottom
+- **Landscape/Wide layouts** (aspect ratio >= threshold): Shows `NavigationRail` on the left side
+
+This ensures optimal navigation placement based on the available screen space, rather than just screen width.
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.

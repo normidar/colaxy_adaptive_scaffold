@@ -7,18 +7,23 @@ void main() {
     await tester.pumpWidget(
       MaterialApp(
         home: AdaptiveScaffold(
-          selectedIndex: 0,
-          onDestinationSelected: (_) {},
-          destinations: const [
-            NavigationDestination(icon: Icon(Icons.home), label: 'Home'),
-            NavigationDestination(icon: Icon(Icons.settings), label: 'Settings'),
+          items: [
+            NavigationItem(
+              name: 'Home',
+              icon: const Icon(Icons.home),
+              page: const Text('Home Page'),
+            ),
+            NavigationItem(
+              name: 'Settings',
+              icon: const Icon(Icons.settings),
+              page: const Text('Settings Page'),
+            ),
           ],
-          body: const Text('Body Text'),
         ),
       ),
     );
 
-    expect(find.text('Body Text'), findsOneWidget);
+    expect(find.text('Home Page'), findsOneWidget);
     expect(find.text('Home'), findsOneWidget);
     expect(find.text('Settings'), findsOneWidget);
   });

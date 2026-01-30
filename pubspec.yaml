@@ -2,7 +2,7 @@
 dependencies:
   flutter:
     sdk: flutter
-description: A Flutter package template.
+description: A Flutter package for adaptive navigation.
 dev_dependencies:
   auto_exporter: ^4.0.0
   build_runner: ^2.0.0
@@ -16,9 +16,9 @@ environment:
 homepage: https://github.com/normidar/colaxy_adaptive_scaffold
 name: colaxy_adaptive_scaffold
 topics:
-  - a
-  - b
-  - c
-  - d
-  - e
+  - adaptive
+  - scaffold
+  - navigation
+  - material
+  - flutter
 version: 0.0.1

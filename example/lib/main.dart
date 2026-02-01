@@ -29,6 +29,11 @@ class MyApp extends StatelessWidget {
             page: const SearchPage(),
           ),
           NavigationItem(
+            name: 'Notifications',
+            icon: const Icon(Icons.notifications),
+            page: const NotificationsPage(),
+          ),
+          NavigationItem(
             name: 'Profile',
             icon: const Icon(Icons.person),
             page: const ProfilePage(),
@@ -114,6 +119,29 @@ class ProfilePage extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           const Text('View your profile information'),
+        ],
+      ),
+    );
+  }
+}
+
+class NotificationsPage extends StatelessWidget {
+  const NotificationsPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(Icons.notifications, size: 100, color: Colors.red[300]),
+          const SizedBox(height: 16),
+          Text(
+            'Notifications Page',
+            style: Theme.of(context).textTheme.headlineMedium,
+          ),
+          const SizedBox(height: 8),
+          const Text('View your notifications here'),
         ],
       ),
     );

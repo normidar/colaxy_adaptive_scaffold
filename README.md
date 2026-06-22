@@ -11,6 +11,7 @@ An adaptive scaffold that automatically switches between `NavigationBar` (bottom
 ## Features
 
 - **Aspect Ratio-Based Adaptation**: Automatically switches navigation layout based on screen aspect ratio (width/height)
+- **Smart Navigation for Many Items**: Automatically uses a Drawer menu on mobile when you have more than 4 navigation items
 - **Simple API**: Just provide a list of navigation items with names, icons, and pages
 - **Internal State Management**: No need to manage selected index yourself
 - **Customizable Threshold**: Configure when the layout switch happens
@@ -142,6 +143,15 @@ The main widget that provides adaptive navigation.
     - `1.2`: Switch at slightly landscape screens (default)
     - `1.5`: Switch only at wider landscape screens
 
+- **`heightThresholdForLabels`** (`double`, default: `600`): Height threshold for showing labels in portrait mode
+  - When in portrait mode and screen height is below this threshold, navigation labels are hidden to save space
+  - Set to `0` to always show labels, or a very high value to always hide labels
+
+- **`maxBottomNavigationItems`** (`int`, default: `4`): Maximum number of items to show in bottom navigation
+  - In portrait mode, if the number of items exceeds this value, a Drawer menu is used instead
+  - Prevents overcrowding in bottom navigation on mobile devices
+  - The drawer can be opened via a menu button in the app bar
+
 - **`floatingActionButton`** (`Widget?`): Optional floating action button to display
 
 ### NavigationItem
@@ -156,12 +166,23 @@ A class that defines a navigation destination.
 
 ## How It Works
 
-The `AdaptiveScaffold` calculates the screen's aspect ratio (`width / height`) and compares it to the `aspectRatioThreshold`:
+The `AdaptiveScaffold` adapts its navigation UI based on screen dimensions and the number of navigation items:
 
-- **Portrait/Narrow layouts** (aspect ratio < threshold): Shows `NavigationBar` at the bottom
-- **Landscape/Wide layouts** (aspect ratio >= threshold): Shows `NavigationRail` on the left side
+### Layout Selection
 
-This ensures optimal navigation placement based on the available screen space, rather than just screen width.
+1. **Landscape/Wide layouts** (aspect ratio >= threshold): Shows `NavigationRail` on the left side
+2. **Portrait layouts with many items** (aspect ratio < threshold AND items > maxBottomNavigationItems): Shows `Drawer` menu accessible via app bar
+3. **Portrait layouts with few items** (aspect ratio < threshold AND items <= maxBottomNavigationItems): Shows `NavigationBar` at the bottom
+
+### Drawer Menu
+
+When you have more than 4 navigation items (configurable via `maxBottomNavigationItems`) in portrait mode:
+- A hamburger menu button appears in the top-left corner
+- Tap it to open a drawer from the left side
+- All navigation items are displayed in the drawer menu
+- This prevents overcrowding in bottom navigation on mobile devices
+
+This ensures optimal navigation placement based on the available screen space and the number of navigation items.
 
 ## License
 

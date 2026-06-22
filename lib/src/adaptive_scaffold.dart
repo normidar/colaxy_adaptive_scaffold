@@ -36,6 +36,10 @@ import 'package:colaxy_adaptive_scaffold/src/navigation_item.dart';
 ///
 /// - **[floatingActionButton]**: An optional [FloatingActionButton] to display.
 ///
+/// - **[maxBottomNavigationItems]**: Maximum navigation items for bottom navigation (default: 4).
+///   In portrait mode, if the number of items exceeds this value, a [Drawer] menu
+///   will be used instead of [NavigationBar].
+///
 /// ## Example
 ///
 /// ```dart
@@ -75,6 +79,7 @@ class AdaptiveScaffold extends StatefulWidget {
     this.initialIndex = 0,
     this.aspectRatioThreshold = 1.2,
     this.heightThresholdForLabels = 600,
+    this.maxBottomNavigationItems = 4,
     this.floatingActionButton,
     super.key,
   });
@@ -112,6 +117,17 @@ class AdaptiveScaffold extends StatefulWidget {
   /// high value to always hide labels in portrait mode.
   final double heightThresholdForLabels;
 
+  /// Maximum number of navigation items to display in bottom navigation.
+  ///
+  /// In portrait mode (when aspect ratio < [aspectRatioThreshold]), if the
+  /// number of [items] exceeds this value, a [Drawer] menu will be used
+  /// instead of the bottom [NavigationBar]. The drawer can be opened via
+  /// a menu button in the app bar.
+  ///
+  /// Defaults to 4. This prevents overcrowding in bottom navigation on
+  /// mobile devices.
+  final int maxBottomNavigationItems;
+
   /// An optional floating action button.
   ///
   /// This button will be displayed in both navigation layouts
@@ -142,6 +158,7 @@ class _AdaptiveScaffoldState extends State<AdaptiveScaffold> {
     final size = MediaQuery.of(context).size;
     final aspectRatio = size.width / size.height;
     final useRail = aspectRatio >= widget.aspectRatioThreshold;
+    final useDrawer = !useRail && widget.items.length > widget.maxBottomNavigationItems;
 
     // Get the current page to display
     final currentPage = widget.items[_selectedIndex].page;
@@ -168,6 +185,48 @@ class _AdaptiveScaffoldState extends State<AdaptiveScaffold> {
             Expanded(child: currentPage),
           ],
         ),
+        floatingActionButton: widget.floatingActionButton,
+      );
+    }
+
+    if (useDrawer) {
+      // Use Drawer for portrait layouts with many items
+      return Scaffold(
+        appBar: AppBar(
+          title: Text(widget.items[_selectedIndex].name),
+        ),
+        drawer: Drawer(
+          child: ListView(
+            padding: EdgeInsets.zero,
+            children: [
+              DrawerHeader(
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.primaryContainer,
+                ),
+                child: Text(
+                  'Menu',
+                  style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                        color: Theme.of(context).colorScheme.onPrimaryContainer,
+                      ),
+                ),
+              ),
+              ...widget.items.asMap().entries.map((entry) {
+                final index = entry.key;
+                final item = entry.value;
+                return ListTile(
+                  leading: item.icon,
+                  title: Text(item.name),
+                  selected: _selectedIndex == index,
+                  onTap: () {
+                    _onDestinationSelected(index);
+                    Navigator.pop(context); // Close drawer
+                  },
+                );
+              }),
+            ],
+          ),
+        ),
+        body: currentPage,
         floatingActionButton: widget.floatingActionButton,
       );
     }
